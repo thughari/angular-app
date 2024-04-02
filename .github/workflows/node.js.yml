@@ -1,0 +1,41 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x] # Expanded Node.js versions
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build # Replace with your actual build command
+
+      - name: Run tests
+        run: npm test # Replace with your actual test command
+
+      - name: Lint code (optional)
+        run: npm run lint # Replace with your actual linting command
+
+      - name: Code coverage (optional)
+        uses: codecov/codecov-action@v3 # Requires codecov setup
+
+  # Add deployment job or integrate with CD pipeline if needed
